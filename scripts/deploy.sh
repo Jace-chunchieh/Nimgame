@@ -24,8 +24,8 @@ echo "==> 4/5 同步 dist 到网站根目录（$WEB_DIR）"
 if [ ! -d "$WEB_DIR" ]; then
   mkdir -p "$WEB_DIR"
 fi
-# 清空站点目录，但保留 hook.key（WebHook 部署密钥，不入库）
-find "$WEB_DIR" -mindepth 1 ! -name 'hook.key' -delete
+# 清空站点目录，但保留 hook.key 与 .deploy_trigger（WebHook 部署相关文件，不入库）
+find "$WEB_DIR" -mindepth 1 ! -name 'hook.key' ! -name '.deploy_trigger' -delete
 cp -r dist/* "$WEB_DIR"/
 
 echo "==> 5/5 部署完成：$(date)"
