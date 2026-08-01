@@ -94,7 +94,7 @@ function onClickLevel(id: number) {
   align-items: center;
   gap: 12px;
   background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(255, 204, 0, 0.15);
   border-radius: 14px;
   padding: 12px 14px;
   cursor: pointer;
@@ -109,8 +109,8 @@ function onClickLevel(id: number) {
 }
 
 .lv-item.current {
-  border-color: rgba(34, 211, 238, 0.7);
-  box-shadow: 0 0 14px rgba(34, 211, 238, 0.2);
+  border-color: rgba(255, 204, 0, 0.7);
+  box-shadow: 0 0 14px rgba(255, 204, 0, 0.2);
 }
 
 .lv-badge {
@@ -121,7 +121,7 @@ function onClickLevel(id: number) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(8, 145, 178, 0.8), rgba(34, 211, 238, 0.6));
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.8), rgba(255, 204, 0, 0.6));
   font-family: 'Consolas', monospace;
   font-size: 17px;
   font-weight: 800;
@@ -165,8 +165,8 @@ function onClickLevel(id: number) {
   width: 24px;
   height: 24px;
   border-radius: 8px;
-  background: rgba(56, 189, 248, 0.12);
-  color: #67e8f9;
+  background: rgba(255, 204, 0, 0.12);
+  color: #ffcc00;
   font-family: 'Consolas', monospace;
   font-size: 12px;
   display: flex;

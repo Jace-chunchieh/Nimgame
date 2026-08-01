@@ -61,7 +61,7 @@ const afterCount = computed(() => Math.max(0, currentCount.value - props.preview
   padding: 10px 14px;
   border-radius: 16px;
   background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(255, 204, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,7 +75,7 @@ const afterCount = computed(() => Math.max(0, currentCount.value - props.preview
 }
 
 .cp-hint.pvp {
-  color: #7dd3fc;
+  color: #ffd966;
   font-weight: 700;
 }
 
@@ -153,9 +153,9 @@ const afterCount = computed(() => Math.max(0, currentCount.value - props.preview
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  background: linear-gradient(135deg, #b8860b, #ffcc00);
   color: #041018;
-  box-shadow: 0 4px 16px rgba(34, 211, 238, 0.35);
+  box-shadow: 0 4px 16px rgba(255, 204, 0, 0.35);
 }
 
 .btn-primary:disabled {

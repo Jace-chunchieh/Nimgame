@@ -143,7 +143,7 @@ function onClear() {
   display: flex;
   gap: 12px;
   background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(255, 204, 0, 0.12);
   border-radius: 14px;
   padding: 12px;
 }
@@ -162,7 +162,7 @@ function onClear() {
 
 .rec-badge.win { background: rgba(52, 211, 153, 0.15); color: #34d399; }
 .rec-badge.lose { background: rgba(248, 113, 113, 0.15); color: #f87171; }
-.rec-badge.p1 { background: rgba(103, 232, 249, 0.15); color: #67e8f9; }
+.rec-badge.p1 { background: rgba(255, 204, 0, 0.15); color: #ffcc00; }
 .rec-badge.p2 { background: rgba(244, 114, 182, 0.15); color: #f472b6; }
 
 .rec-info {

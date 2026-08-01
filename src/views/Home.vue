@@ -164,7 +164,7 @@ const stats = computed(() => {
   font-weight: 900;
   letter-spacing: 6px;
   font-family: 'Consolas', monospace;
-  background: linear-gradient(135deg, #67e8f9, #a78bfa, #34d399);
+  background: linear-gradient(135deg, #ffcc00, #ffb300, #ffe680);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -192,26 +192,26 @@ const stats = computed(() => {
   position: absolute;
   inset: 0;
   border-radius: 24px;
-  border: 1px solid rgba(34, 211, 238, 0.35);
+  border: 1px solid rgba(255, 204, 0, 0.35);
   animation: ringBreath 2.2s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes ringBreath {
-  0%, 100% { box-shadow: 0 0 12px rgba(34, 211, 238, 0.15), inset 0 0 12px rgba(34, 211, 238, 0.08); }
-  50% { box-shadow: 0 0 26px rgba(34, 211, 238, 0.45), inset 0 0 20px rgba(34, 211, 238, 0.2); }
+  0%, 100% { box-shadow: 0 0 12px rgba(255, 204, 0, 0.15), inset 0 0 12px rgba(255, 204, 0, 0.08); }
+  50% { box-shadow: 0 0 26px rgba(255, 204, 0, 0.45), inset 0 0 20px rgba(255, 204, 0, 0.2); }
 }
 
 .bc-icon {
   font-size: 26px;
-  color: #67e8f9;
-  text-shadow: 0 0 16px rgba(103, 232, 249, 0.9);
+  color: #ffcc00;
+  text-shadow: 0 0 16px rgba(255, 204, 0, 0.9);
 }
 
 .bc-text {
   font-size: 13px;
   letter-spacing: 4px;
-  color: #a5f3fc;
+  color: #ffe9a8;
   font-weight: 700;
 }
 
@@ -221,7 +221,7 @@ const stats = computed(() => {
   display: flex;
   gap: 14px;
   background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(255, 204, 0, 0.15);
   border-radius: 14px;
   padding: 10px 22px;
 }
@@ -237,7 +237,7 @@ const stats = computed(() => {
   font-size: 20px;
   font-weight: 800;
   font-family: 'Consolas', monospace;
-  color: #67e8f9;
+  color: #ffcc00;
 }
 
 .ss-label {
@@ -270,8 +270,8 @@ const stats = computed(() => {
 .mb-btn:active { transform: scale(0.97); }
 
 .mb-btn.primary {
-  background: linear-gradient(135deg, rgba(8, 145, 178, 0.9), rgba(34, 211, 238, 0.75));
-  box-shadow: 0 6px 24px rgba(34, 211, 238, 0.3);
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.9), rgba(255, 204, 0, 0.75));
+  box-shadow: 0 6px 24px rgba(255, 204, 0, 0.3);
 }
 
 .mb-btn.accent {
@@ -324,7 +324,7 @@ const stats = computed(() => {
   display: flex;
   justify-content: space-around;
   background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(255, 204, 0, 0.12);
   border-radius: 16px;
   padding: 10px 0;
 }
@@ -342,7 +342,7 @@ const stats = computed(() => {
   padding: 4px 18px;
 }
 
-.bn-item:active { color: #67e8f9; }
+.bn-item:active { color: #ffcc00; }
 
 .bn-icon {
   font-size: 18px;

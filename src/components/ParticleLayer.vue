@@ -51,7 +51,7 @@ function spawnBurst(cx?: number, cy?: number) {
   const count = Math.min(props.count ?? 40, maxParticles - particles.length)
   const colors = props.color
     ? [props.color]
-    : ['#22d3ee', '#34d399', '#fbbf24', '#f87171', '#a78bfa']
+    : ['#ffcc00', '#34d399', '#fbbf24', '#f87171', '#a78bfa']
   for (let i = 0; i < count; i++) {
     const angle = Math.random() * Math.PI * 2
     const speed = 1.5 + Math.random() * 4

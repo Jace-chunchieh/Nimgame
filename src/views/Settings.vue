@@ -165,7 +165,7 @@ function onResetProgress() {
 
 .set-group {
   background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(255, 204, 0, 0.12);
   border-radius: 14px;
   padding: 14px;
   margin-bottom: 12px;
@@ -197,7 +197,7 @@ function onResetProgress() {
 }
 
 .seg-btn.active {
-  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  background: linear-gradient(135deg, #b8860b, #ffcc00);
   border-color: transparent;
   color: #041018;
 }
@@ -233,9 +233,9 @@ function onResetProgress() {
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  background: rgba(8, 145, 178, 0.15);
-  color: #67e8f9;
+  border: 1px solid rgba(255, 204, 0, 0.4);
+  background: rgba(184, 134, 11, 0.15);
+  color: #ffcc00;
   font-size: 16px;
   font-weight: 800;
   cursor: pointer;
@@ -262,7 +262,7 @@ function onResetProgress() {
 }
 
 .toggle.on {
-  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  background: linear-gradient(135deg, #b8860b, #ffcc00);
 }
 
 .toggle-dot {

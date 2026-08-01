@@ -132,7 +132,7 @@ watch(
   padding: 10px 12px 12px;
   border-radius: 16px;
   background: linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(10, 15, 32, 0.9));
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(255, 204, 0, 0.15);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease,
     box-shadow 0.25s ease, border-color 0.25s ease;
   touch-action: none;
@@ -142,8 +142,8 @@ watch(
 
 .energy-pile.selected {
   transform: translateY(-6px);
-  border-color: rgba(56, 189, 248, 0.8);
-  box-shadow: 0 0 18px rgba(56, 189, 248, 0.35), 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 204, 0, 0.8);
+  box-shadow: 0 0 18px rgba(255, 204, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .energy-pile.dimmed {
@@ -173,7 +173,7 @@ watch(
 .pile-label {
   font-size: 13px;
   letter-spacing: 2px;
-  color: #7dd3fc;
+  color: #ffd966;
   font-weight: 600;
 }
 
@@ -194,13 +194,13 @@ watch(
 
 .core-item {
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #67e8f9, #0891b2 70%);
-  box-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+  background: radial-gradient(circle at 35% 30%, #ffcc00, #b8860b 70%);
+  box-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
   transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .core-item.keep {
-  background: radial-gradient(circle at 35% 30%, #67e8f9, #0891b2 70%);
+  background: radial-gradient(circle at 35% 30%, #ffcc00, #b8860b 70%);
 }
 
 .core-item.remove {

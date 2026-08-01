@@ -48,7 +48,7 @@ const xorBits = computed(() => toBinary(props.xorValue, props.bitWidth).split(''
 <style scoped>
 .binary-panel {
   background: rgba(2, 6, 23, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(255, 204, 0, 0.2);
   border-radius: 14px;
   padding: 10px 12px;
 }
@@ -96,8 +96,8 @@ const xorBits = computed(() => toBinary(props.xorValue, props.bitWidth).split(''
 }
 
 .bp-bit.one {
-  color: #67e8f9;
-  background: rgba(8, 145, 178, 0.25);
+  color: #ffcc00;
+  background: rgba(184, 134, 11, 0.25);
 }
 
 .bp-bit.zero {

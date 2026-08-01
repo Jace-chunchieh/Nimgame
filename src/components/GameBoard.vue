@@ -271,7 +271,7 @@ watch(
   align-items: center;
   gap: 8px;
   background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(255, 204, 0, 0.15);
   border-radius: 14px;
   padding: 8px 12px;
 }
@@ -300,7 +300,7 @@ watch(
 }
 
 .bt-value.ai { color: #fbbf24; }
-.bt-value.p1 { color: #67e8f9; }
+.bt-value.p1 { color: #ffcc00; }
 .bt-value.p2 { color: #f472b6; }
 .bt-value.diff { font-size: 13px; }
 
@@ -358,7 +358,7 @@ watch(
   align-self: center;
   border: none;
   background: rgba(30, 41, 59, 0.7);
-  color: #7dd3fc;
+  color: #ffd966;
   border-radius: 8px;
   padding: 6px 14px;
   font-size: 12px;

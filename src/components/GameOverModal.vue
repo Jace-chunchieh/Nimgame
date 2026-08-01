@@ -246,7 +246,7 @@ const letterOf = (i: number) => String.fromCharCode(65 + i)
 .btn:active { transform: scale(0.96); }
 
 .btn-primary {
-  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  background: linear-gradient(135deg, #b8860b, #ffcc00);
   color: #041018;
 }
 

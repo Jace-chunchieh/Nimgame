@@ -96,7 +96,7 @@ const steps = [
   display: flex;
   gap: 12px;
   background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(255, 204, 0, 0.12);
   border-radius: 14px;
   padding: 14px;
 }
@@ -106,7 +106,7 @@ const steps = [
   height: 28px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  background: linear-gradient(135deg, #b8860b, #ffcc00);
   color: #041018;
   font-weight: 800;
   font-size: 14px;
@@ -118,7 +118,7 @@ const steps = [
 .ts-title {
   font-size: 15px;
   font-weight: 700;
-  color: #67e8f9;
+  color: #ffcc00;
   margin-bottom: 5px;
 }
 
@@ -131,11 +131,11 @@ const steps = [
 .ts-example {
   margin-top: 8px;
   padding: 8px 10px;
-  background: rgba(34, 211, 238, 0.08);
-  border-left: 3px solid #22d3ee;
+  background: rgba(255, 204, 0, 0.08);
+  border-left: 3px solid #ffcc00;
   border-radius: 6px;
   font-size: 12px;
-  color: #a5f3fc;
+  color: #ffe9a8;
   font-family: 'Consolas', monospace;
   line-height: 1.6;
 }
