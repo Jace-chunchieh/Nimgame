@@ -30,7 +30,7 @@
           :data-pile-index="i"
           :label="String.fromCharCode(65 + i)"
           :count="pile"
-          :selected="selectedIndex === i && previewRemove === 0"
+          :selected="selectedIndex === i"
           :dimmed="selectedIndex !== null && selectedIndex !== i"
           :disabled="status !== 'player-turn'"
           :bit-width="bitWidth"
@@ -39,6 +39,8 @@
           @select="onSelect(i)"
           @preview-change="(r: number) => onPreview(i, r)"
           @swipe-end="(r: number) => onSwipeEnd(i, r)"
+          @confirm="onPileConfirm(i)"
+          @cancel="onCancel"
         />
       </div>
 
@@ -63,16 +65,11 @@
       />
     </div>
 
-    <!-- 底部操作区 -->
+    <!-- 底部状态提示区 -->
     <ControlPanel
       :status="status"
-      :selected-index="selectedIndex"
-      :preview-remove="previewRemove"
-      :piles="piles"
       :player-label="currentPlayerText"
       :pvp="isPvp"
-      @confirm="onConfirm"
-      @cancel="onCancel"
     />
   </div>
 </template>
@@ -82,7 +79,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import gsap from 'gsap'
 import type { Difficulty } from '../types'
 import { nimSum, nimSumAfterChange } from '../engine/xorCalculator'
-import { sfxSelect, sfxStable, sfxRemove } from '../sound/sfx'
+import { sfxSelect, sfxStable } from '../sound/sfx'
 import { vibrate } from '../utils/haptics'
 import EnergyPile from './EnergyPile.vue'
 import XORCore from './XORCore.vue'
@@ -167,10 +164,12 @@ function onPreview(index: number, remove: number) {
 
 function onSwipeEnd(_index: number, remove: number) {
   previewRemove.value = remove
-  if (remove > 0) {
-    sfxRemove()
-    vibrate(20)
-  }
+}
+
+/** 就近确认（点击按钮或上滑手势触发） */
+function onPileConfirm(index: number) {
+  if (selectedIndex.value !== index || previewRemove.value < 1) return
+  onConfirm()
 }
 
 function onCancel() {
