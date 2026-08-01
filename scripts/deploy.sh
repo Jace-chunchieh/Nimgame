@@ -17,8 +17,8 @@ git pull origin master
 echo "==> 2/5 安装依赖"
 npm install --no-audit --no-fund
 
-echo "==> 3/5 构建生产产物（vite 直构建，跳过类型检查以适配低配服务器）"
-npx vite build
+echo "==> 3/5 构建生产产物（node 直调 vite，跳过类型检查以适配低配服务器）"
+node node_modules/vite/bin/vite.js build
 
 echo "==> 4/5 同步 dist 到网站根目录（$WEB_DIR）"
 if [ ! -d "$WEB_DIR" ]; then
