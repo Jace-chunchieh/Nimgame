@@ -1,0 +1,32 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+
+# 本地日志
+dev.log
+*.log
+
+# 环境变量与密钥（严禁提交）
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+auth.json
+credentials*
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# opencode 本地配置（可能包含个人配置）
+.opencode/
+opencode.json
+opencode.jsonc

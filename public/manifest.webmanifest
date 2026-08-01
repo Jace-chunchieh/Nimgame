@@ -1,0 +1,18 @@
+{
+  "name": "XOR NIM 量子异或竞技场",
+  "short_name": "XOR NIM",
+  "description": "二进制异或尼姆博弈策略益智游戏",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070b1a",
+  "theme_color": "#070b1a",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
