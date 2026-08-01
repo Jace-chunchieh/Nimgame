@@ -15,10 +15,10 @@ cd "$REPO_DIR"
 git pull origin master
 
 echo "==> 2/5 安装依赖"
-npm install
+npm install --no-audit --no-fund
 
-echo "==> 3/5 构建生产产物"
-npm run build
+echo "==> 3/5 构建生产产物（vite 直构建，跳过类型检查以适配低配服务器）"
+npx vite build
 
 echo "==> 4/5 同步 dist 到网站根目录（$WEB_DIR）"
 if [ ! -d "$WEB_DIR" ]; then
@@ -28,4 +28,4 @@ rm -rf "$WEB_DIR"/*
 cp -r dist/* "$WEB_DIR"/
 
 echo "==> 5/5 部署完成：$(date)"
-echo "访问站点验证：http://<域名或IP>/"
+echo "访问站点验证：http://$WEB_DIR/"
