@@ -89,24 +89,21 @@ export const useGameStore = defineStore('game', () => {
     level?: number
   }) {
     const isPvp = opts.gameMode === 'pvp'
+    const humanFirst = opts.humanFirst ?? settings.value.humanFirst
     const piles = opts.piles ?? randomPiles(settings.value.pileCount, settings.value.maxPerPile)
     mode.value = opts.gameMode ?? 'quick'
     level.value = opts.level ?? 1
     initialPiles.value = [...piles]
     state.value = {
       piles,
-      // 括号明确优先级：?? 与三元混用
-      currentPlayer: isPvp
-        ? 'p1'
-        : (opts.humanFirst ?? settings.value.humanFirst)
-          ? 'human'
-          : 'ai',
-      status: 'ready',
+      // 开局直接进入可操作状态，避免卡在 ready
+      currentPlayer: isPvp ? 'p1' : humanFirst ? 'human' : 'ai',
+      status: isPvp || humanFirst ? 'player-turn' : 'ai-thinking',
       difficulty: opts.difficulty ?? settings.value.difficulty,
       winner: null,
       history: [],
       round: 1,
-      humanFirst: opts.humanFirst ?? settings.value.humanFirst,
+      humanFirst,
     }
     lastStats.value = null
   }
