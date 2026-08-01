@@ -52,4 +52,14 @@ describe('困难 AI', () => {
 describe('规则边界', () => {
   it('[0,0] 无合法操作', () => expect(isLegalMove([0, 0], 0, 1)).toBe(false))
   it('越界下标非法', () => expect(isLegalMove([1], 5, 1)).toBe(false))
+  it('允许移除全部核心（拿空一排）', () => {
+    expect(isLegalMove([7], 0, 7)).toBe(true)
+    expect(isLegalMove([5, 3], 1, 3)).toBe(true)
+    const after = applyMove([5, 3], 0, 5)
+    expect(after).toEqual([0, 3])
+  })
+  it('超出数量的操作非法', () => {
+    expect(isLegalMove([4], 0, 5)).toBe(false)
+    expect(isLegalMove([4], 0, 0)).toBe(false)
+  })
 })

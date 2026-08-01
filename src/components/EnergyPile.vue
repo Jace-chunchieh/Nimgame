@@ -133,8 +133,13 @@ function onPointerMove(e: PointerEvent) {
   }
 
   if (lockedAxis === 'h') {
-    let remove = Math.round(dx / 30)
-    remove = Math.max(0, Math.min(props.count - 1, remove))
+    const perStep = 30
+    let remove = Math.round(dx / perStep)
+    // 最后一段吸附：滑动超过倒数第二格中点即全取，无需滑满整排
+    if (dx > (props.count - 1) * perStep + perStep / 2) {
+      remove = props.count
+    }
+    remove = Math.max(0, Math.min(props.count, remove))
     if (remove !== previewRemove.value) {
       previewRemove.value = remove
       const now = performance.now()
