@@ -2,14 +2,14 @@
 /**
  * XOR NIM 部署 WebHook 入口
  * GitHub 推送后访问 /hook.php?access_key=<密钥> 触发服务器自动部署
- * 密钥从 /www/wwwroot/hook.key 读取（不入库、不被部署脚本覆盖）
+ * 密钥从站点根目录下的 hook.key 读取（受 PHP open_basedir 限制，必须在站点目录内）
  */
-$keyFile = '/www/wwwroot/hook.key';
+$keyFile = ($_SERVER['DOCUMENT_ROOT'] ?? '/www/wwwroot/Nimgame') . '/hook.key';
 $key = trim(@file_get_contents($keyFile));
 
 if (!$key || ($_GET['access_key'] ?? '') !== $key) {
     http_response_code(403);
-    exit('forbidden');
+    exit('forbidden got=' . md5($_GET['access_key'] ?? '') . ' file=' . md5($key));
 }
 
 $log = '/www/wwwroot/deploy.log';
