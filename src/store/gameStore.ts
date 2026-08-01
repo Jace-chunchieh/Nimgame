@@ -4,6 +4,7 @@ import type { Difficulty, GameMode, GameState, GameStats, Move } from '../types'
 import { applyMove, isLegalMove } from '../engine/nimRules'
 import { nimSum, isGameOver } from '../engine/xorCalculator'
 import { decideAIMove, findOptimalMove, getSuggestion } from '../engine/nimAI'
+import type { AIMove } from '../engine/nimAI'
 import { loadJSON, saveJSON, KEYS } from '../storage/storage'
 
 export interface GameSettings {
@@ -40,8 +41,11 @@ function randomPiles(count: number, max: number): number[] {
   return piles
 }
 
+/** 一局内提示次数上限 */
+export const HINT_LIMIT = 3
+
 /** 计算一局统计（PRD 第 9 节） */
-export function computeStats(history: Move[]): GameStats {
+export function computeStats(history: Move[], durationMs = 0): GameStats {
   const optimalMoves = history.filter(
     (m) => m.player === 'human' && m.isOptimal,
   ).length
@@ -54,7 +58,7 @@ export function computeStats(history: Move[]): GameStats {
   const score = Math.round(
     Math.max(0, Math.min(100, optimalRatio * 100 - mistakes * 8 + (zeroXorMoves ? 10 : 0))),
   )
-  return { rounds: history.length, optimalMoves, zeroXorMoves, mistakes, score }
+  return { rounds: history.length, optimalMoves, zeroXorMoves, mistakes, score, durationMs }
 }
 
 export const useGameStore = defineStore('game', () => {
@@ -68,6 +72,8 @@ export const useGameStore = defineStore('game', () => {
     history: [],
     round: 1,
     humanFirst: true,
+    hintUsed: 0,
+    startedAt: 0,
   })
   const mode = ref<GameMode>('quick')
   const level = ref(1)
@@ -104,6 +110,8 @@ export const useGameStore = defineStore('game', () => {
       history: [],
       round: 1,
       humanFirst,
+      hintUsed: 0,
+      startedAt: Date.now(),
     }
     lastStats.value = null
   }
@@ -195,7 +203,57 @@ export const useGameStore = defineStore('game', () => {
   }
 
   function finish() {
-    lastStats.value = computeStats(state.value.history)
+    lastStats.value = computeStats(
+      state.value.history,
+      Date.now() - state.value.startedAt,
+    )
+  }
+
+  /**
+   * 悔棋：撤销玩家上一步操作（连同 AI 的响应）
+   * 仅人机模式玩家回合可用，pvp 不支持
+   */
+  function undoLastMove(): boolean {
+    const s = state.value
+    if (s.status !== 'player-turn') return false
+    if (mode.value === 'pvp') return false
+
+    const h = s.history
+    if (h.length === 0) return false
+
+    const undoList: Move[] = []
+    // 玩家回合时最后一条通常是 AI 的响应，先回滚
+    let last = h[h.length - 1]
+    if (last.player === 'ai') {
+      h.pop()
+      undoList.push(last)
+    }
+    // 再回滚玩家自己的操作
+    last = h[h.length - 1]
+    if (last && last.player === 'human') {
+      h.pop()
+      undoList.push(last)
+    }
+    if (undoList.length === 0) return false
+
+    for (const m of undoList) {
+      s.piles[m.pileIndex] = m.before
+    }
+    s.round = Math.max(1, s.round - undoList.length)
+    s.status = 'player-turn'
+    s.currentPlayer = 'human'
+    s.winner = null
+    return true
+  }
+
+  /** 获取当前局面最优操作提示（限次） */
+  function useHint(): AIMove | null {
+    const s = state.value
+    if (s.status !== 'player-turn' || s.hintUsed >= HINT_LIMIT) return null
+    const optimal = findOptimalMove(s.piles)
+    if (!optimal) return null
+    s.hintUsed += 1
+    return optimal
   }
 
   return {
@@ -209,5 +267,7 @@ export const useGameStore = defineStore('game', () => {
     newGame,
     playerMove,
     aiMove,
+    undoLastMove,
+    useHint,
   }
 })

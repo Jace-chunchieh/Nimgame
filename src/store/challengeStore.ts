@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { LevelConfig } from '../types'
+import type { LevelConfig, LevelStars } from '../types'
 import { loadJSON, saveJSON, KEYS } from '../storage/storage'
 
 /** 闯关模式关卡配置（PRD 第 10 节） */
@@ -55,25 +55,65 @@ export const LEVELS: LevelConfig[] = [
   },
 ]
 
-/** 闯关进度（本地持久化，存储已解锁的最大关卡编号） */
+interface ChallengeProgress {
+  unlocked: number
+  stars: LevelStars
+}
+
+const DEFAULT_PROGRESS: ChallengeProgress = { unlocked: 1, stars: {} }
+
+/** 读取进度（兼容旧版纯数字格式） */
+function loadProgress(): ChallengeProgress {
+  const raw = loadJSON<unknown>(KEYS.progress, DEFAULT_PROGRESS)
+  if (typeof raw === 'number') {
+    // 旧格式：只有解锁关卡数
+    const migrated: ChallengeProgress = { unlocked: raw, stars: {} }
+    saveJSON(KEYS.progress, migrated)
+    return migrated
+  }
+  const obj = raw as Partial<ChallengeProgress>
+  return {
+    unlocked: typeof obj.unlocked === 'number' ? obj.unlocked : 1,
+    stars: obj.stars && typeof obj.stars === 'object' ? (obj.stars as LevelStars) : {},
+  }
+}
+
+/** 按最优操作比例评定星级（1~3） */
+export function rateStars(stats: { optimalMoves: number; rounds: number }): number {
+  const humanMoves = Math.max(1, Math.ceil(stats.rounds / 2))
+  const ratio = stats.optimalMoves / humanMoves
+  if (ratio >= 0.9) return 3
+  if (ratio >= 0.6) return 2
+  return 1
+}
+
+/** 闯关进度（本地持久化） */
 export const useChallengeStore = defineStore('challenge', () => {
-  const unlocked = ref<number>(loadJSON<number>(KEYS.progress, 1))
+  const progress = ref<ChallengeProgress>(loadProgress())
 
   function isUnlocked(id: number) {
-    return id <= unlocked.value
+    return id <= progress.value.unlocked
   }
 
-  function completeLevel(id: number) {
-    if (id >= unlocked.value && id < LEVELS.length) {
-      unlocked.value = id + 1
-      saveJSON(KEYS.progress, unlocked.value)
+  function completeLevel(id: number, stars: number) {
+    if (id >= progress.value.unlocked && id < LEVELS.length) {
+      progress.value.unlocked = id + 1
     }
+    // 星级取历史最高
+    if (stars > (progress.value.stars[id] ?? 0)) {
+      progress.value.stars[id] = stars
+    }
+    saveJSON(KEYS.progress, progress.value)
+  }
+
+  function starsOf(id: number) {
+    return progress.value.stars[id] ?? 0
   }
 
   function resetProgress() {
-    unlocked.value = 1
-    saveJSON(KEYS.progress, unlocked.value)
+    progress.value = { unlocked: 1, stars: {} }
+    saveJSON(KEYS.progress, progress.value)
   }
 
-  return { unlocked, isUnlocked, completeLevel, resetProgress }
+  return { progress, isUnlocked, completeLevel, starsOf, resetProgress }
 })

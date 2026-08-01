@@ -6,6 +6,7 @@
       dimmed: dimmed && !selected,
       disabled,
       'ai-target': isAiTarget,
+      highlighted,
     }"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
@@ -72,7 +73,9 @@ const props = defineProps<{
   disabled: boolean
   bitWidth: number
   isAiTarget: boolean
+  highlighted?: boolean
   resetSignal: number
+  vibration?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -99,7 +102,7 @@ const binaryStr = computed(() => toBinary(props.count, props.bitWidth))
 function onConfirmClick() {
   if (previewRemove.value > 0) {
     sfxRemove()
-    vibrate(20)
+    if (props.vibration !== false) vibrate(20)
     emit('confirm')
   }
 }
@@ -139,6 +142,8 @@ function onPointerMove(e: PointerEvent) {
         sfxSwipe()
         lastSwipeSound = now
       }
+      // 每滑动一格轻微震动，提升操作手感
+      if (props.vibration !== false) vibrate(5)
       emit('previewChange', remove)
     }
   } else if (dy >= 50) {
@@ -146,7 +151,7 @@ function onPointerMove(e: PointerEvent) {
     if (previewRemove.value > 0) {
       swipeUpDone = true
       sfxRemove()
-      vibrate([20, 30])
+      if (props.vibration !== false) vibrate([20, 30])
       emit('confirm')
     }
   }
@@ -156,7 +161,7 @@ function onPointerUp() {
   if (!dragging) return
   dragging = false
   if (previewRemove.value > 0 && !swipeUpDone) {
-    vibrate(10)
+    if (props.vibration !== false) vibrate(10)
     emit('swipeEnd', previewRemove.value)
   }
 }
@@ -200,6 +205,21 @@ watch(
 
 .energy-pile.ai-target .core-item {
   animation: aiFlash 0.9s ease-in-out infinite;
+}
+
+/* 提示按钮高亮的最优操作阵列 */
+.energy-pile.highlighted {
+  border-color: rgba(255, 204, 0, 0.95) !important;
+  box-shadow: 0 0 22px rgba(255, 204, 0, 0.55), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.energy-pile.highlighted .core-item {
+  animation: hintFlash 0.8s ease-in-out infinite;
+}
+
+@keyframes hintFlash {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 204, 0, 0.4); }
+  50% { box-shadow: 0 0 16px rgba(255, 204, 0, 1); }
 }
 
 @keyframes aiFlash {

@@ -30,4 +30,7 @@ export const KEYS = {
   settings: 'xor-nim:settings',
   records: 'xor-nim:records',
   progress: 'xor-nim:progress',
+  achievements: 'xor-nim:achievements',
+  streak: 'xor-nim:streak',
+  totalWins: 'xor-nim:total-wins',
 } as const

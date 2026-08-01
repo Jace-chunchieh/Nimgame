@@ -17,12 +17,18 @@
         <span class="bt-label">模式</span>
         <span class="bt-value diff">{{ isPvp ? '双人对战' : diffText }}</span>
       </div>
+      <template v-if="!isPvp && status === 'player-turn'">
+        <button class="bt-action" :disabled="hintUsed >= hintLimit" @click="$emit('hint')">
+          提示 {{ hintLimit - hintUsed > 0 ? `(${hintLimit - hintUsed})` : '' }}
+        </button>
+        <button class="bt-action" :disabled="!canUndo" @click="$emit('undo')">悔棋</button>
+      </template>
       <button class="bt-exit" @click="$emit('exit')">退出</button>
     </div>
 
     <!-- 中间游戏区 -->
     <div class="board-middle">
-      <div class="piles-area">
+      <div class="piles-area" :class="{ 'xor-zero': isZeroPreview }">
         <div v-if="status === 'ai-thinking'" class="area-scanline"></div>
         <EnergyPile
           v-for="(pile, i) in piles"
@@ -35,8 +41,10 @@
           :disabled="status !== 'player-turn'"
           :bit-width="bitWidth"
           :is-ai-target="aiTargetIndex === i"
-          :reset-signal="resetSignal"
-          @select="onSelect(i)"
+  :highlighted="hintIndex === i"
+  :reset-signal="resetSignal"
+  :vibration="vibration"
+  @select="onSelect(i)"
           @preview-change="(r: number) => onPreview(i, r)"
           @swipe-end="(r: number) => onSwipeEnd(i, r)"
           @confirm="onPileConfirm(i)"
@@ -95,14 +103,29 @@ const props = defineProps<{
   aiTargetIndex: number | null
   bitWidth: number
   pvp?: boolean
+  hintIndex?: number | null
+  hintUsed?: number
+  hintLimit?: number
+  canUndo?: boolean
+  vibration?: boolean
 }>()
 
 const emit = defineEmits<{
   commit: [index: number, remove: number]
   exit: []
+  hint: []
+  undo: []
 }>()
 
 const isPvp = computed(() => props.pvp === true)
+const hintLimit = computed(() => props.hintLimit ?? 3)
+const hintUsed = computed(() => props.hintUsed ?? 0)
+const canUndo = computed(() => props.canUndo === true)
+
+/** XOR 预览归零时的阵列强化反馈 */
+const isZeroPreview = computed(
+  () => previewRemove.value > 0 && previewXor.value === 0,
+)
 
 const diffText = computed(
   () => ({ easy: '简单', normal: '普通', hard: '困难' })[props.difficulty],
@@ -154,7 +177,7 @@ function onSelect(index: number) {
   selectedIndex.value = index
   previewRemove.value = 0
   sfxSelect()
-  vibrate(15)
+  if (props.vibration !== false) vibrate(15)
 }
 
 function onPreview(index: number, remove: number) {
@@ -217,7 +240,7 @@ function onConfirm() {
   flyCores(index)
   if (nextXor === 0) {
     sfxStable()
-    vibrate([30, 40, 30])
+    if (props.vibration !== false) vibrate([30, 40, 30])
   }
   commitTimer = setTimeout(() => {
     commitTimer = null
@@ -263,6 +286,23 @@ watch(
   flex-direction: column;
   gap: 12px;
   min-height: 100%;
+}
+
+/* 桌面端：阵列横排 */
+@media (min-width: 900px) {
+  .piles-area {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* 桌面端 hover 反馈 */
+@media (hover: hover) {
+  .energy-pile:not(.disabled):hover {
+    border-color: rgba(255, 204, 0, 0.5);
+    transform: translateY(-3px);
+  }
 }
 
 .board-top {
@@ -314,6 +354,23 @@ watch(
   cursor: pointer;
 }
 
+.bt-action {
+  border: 1px solid rgba(255, 204, 0, 0.4);
+  background: rgba(184, 134, 11, 0.15);
+  color: #ffcc00;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.bt-action:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 .board-middle {
   display: flex;
   flex-direction: column;
@@ -362,5 +419,16 @@ watch(
   padding: 6px 14px;
   font-size: 12px;
   cursor: pointer;
+}
+
+/* XOR 归零强化反馈：所有阵列金色描边脉冲 */
+.piles-area.xor-zero .energy-pile {
+  border-color: rgba(255, 204, 0, 0.85) !important;
+  animation: zeroPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes zeroPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 204, 0, 0.25); }
+  50% { box-shadow: 0 0 20px rgba(255, 204, 0, 0.6); }
 }
 </style>

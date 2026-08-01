@@ -6,6 +6,28 @@
       <button v-if="records.records.length" class="clear-btn" @click="onClear">清空</button>
     </div>
 
+    <div class="ach-section float-in">
+      <div class="ach-head">
+        <span class="ach-title">成就</span>
+        <span class="ach-count">{{ achievements.unlocked.length }} / {{ ACHIEVEMENTS.length }}</span>
+      </div>
+      <div class="ach-grid">
+        <div
+          v-for="a in ACHIEVEMENTS"
+          :key="a.id"
+          class="ach-item"
+          :class="{ locked: !achievements.isUnlocked(a.id) }"
+        >
+          <span class="ach-icon">{{ a.icon }}</span>
+          <span class="ach-name">{{ a.name }}</span>
+          <span class="ach-desc">{{ a.desc }}</span>
+        </div>
+      </div>
+      <div class="ach-streak">
+        当前连胜 <b>{{ achievements.winStreak }}</b> 场 · 累计 <b>{{ achievements.totalWins }}</b> 胜
+      </div>
+    </div>
+
     <div v-if="records.records.length === 0" class="empty">
       <div class="empty-icon">◌</div>
       <p>暂无对战记录</p>
@@ -24,7 +46,7 @@
             <span class="rec-score">{{ r.stats.score }} 分</span>
           </div>
           <div class="rec-meta">
-            {{ formatDate(r.date) }} · {{ r.stats.rounds }} 回合 · 最优 {{ r.stats.optimalMoves }} · 失误 {{ r.stats.mistakes }}
+            {{ formatDate(r.date) }} · {{ r.stats.rounds }} 回合 · 最优 {{ r.stats.optimalMoves }} · 失误 {{ r.stats.mistakes }} · {{ durationText(r.stats.durationMs) }}
           </div>
           <div class="rec-piles">
             初始：{{ r.piles.join(' / ') }}
@@ -37,10 +59,19 @@
 
 <script setup lang="ts">
 import { useRecordStore } from '../store/recordStore'
+import { useAchievementStore, ACHIEVEMENTS } from '../store/achievementStore'
 import type { Difficulty } from '../types'
 
 defineEmits<{ back: [] }>()
 const records = useRecordStore()
+const achievements = useAchievementStore()
+
+function durationText(ms: number) {
+  const s = Math.round(ms / 1000)
+  const m = Math.floor(s / 60)
+  const sec = s % 60
+  return m > 0 ? `${m}m${sec}s` : `${sec}s`
+}
 
 function diffText(d: Difficulty) {
   return { easy: '简单', normal: '普通', hard: '困难' }[d]
@@ -210,5 +241,96 @@ function onClear() {
   font-size: 11px;
   color: #475569;
   font-family: 'Consolas', monospace;
+}
+
+.ach-section {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 204, 0, 0.2);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.ach-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ach-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffcc00;
+}
+
+.ach-count {
+  font-size: 11px;
+  color: #8a7530;
+  font-family: 'Consolas', monospace;
+}
+
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.ach-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 204, 0, 0.07);
+  border: 1px solid rgba(255, 204, 0, 0.25);
+  border-radius: 12px;
+  padding: 10px 6px;
+  text-align: center;
+}
+
+.ach-item.locked {
+  background: rgba(51, 65, 85, 0.3);
+  border-color: rgba(51, 65, 85, 0.4);
+  opacity: 0.55;
+}
+
+.ach-icon {
+  font-size: 22px;
+}
+
+.ach-item.locked .ach-icon {
+  filter: grayscale(1);
+}
+
+.ach-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffd966;
+}
+
+.ach-item.locked .ach-name {
+  color: #64748b;
+}
+
+.ach-desc {
+  font-size: 10px;
+  color: #d4c68a;
+  line-height: 1.4;
+}
+
+.ach-item.locked .ach-desc {
+  color: #475569;
+}
+
+.ach-streak {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 11px;
+  color: #8a7530;
+}
+
+.ach-streak b {
+  color: #ffcc00;
 }
 </style>

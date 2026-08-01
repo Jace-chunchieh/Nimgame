@@ -51,6 +51,10 @@ export interface GameState {
   round: number
   /** 玩家先手 */
   humanFirst: boolean
+  /** 本局已使用提示次数 */
+  hintUsed: number
+  /** 本局开始时间戳 */
+  startedAt: number
 }
 
 /** 一局结束后的统计 */
@@ -61,7 +65,12 @@ export interface GameStats {
   mistakes: number
   /** 策略评分 0-100 */
   score: number
+  /** 对局总时长（毫秒） */
+  durationMs: number
 }
+
+/** 闯关星级（1-3，按最优操作比例评定） */
+export type LevelStars = Record<number, number>
 
 /** 战绩记录（持久化） */
 export interface MatchRecord {

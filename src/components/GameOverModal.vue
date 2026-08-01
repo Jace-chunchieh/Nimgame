@@ -8,6 +8,21 @@
         {{ subtitleText }}
       </div>
 
+      <div v-if="pvp" class="m-score">
+        <div class="ms-col" :class="{ lead: score.p1 > score.p2 }">
+          <span class="msc-name">玩家 1</span>
+          <span class="msc-num">{{ score.p1 }}</span>
+        </div>
+        <span class="msc-vs">:</span>
+        <div class="ms-col" :class="{ lead: score.p2 > score.p1 }">
+          <span class="msc-name">玩家 2</span>
+          <span class="msc-num">{{ score.p2 }}</span>
+        </div>
+      </div>
+      <div v-if="pvp && seriesOver" class="m-series">
+        🏆 系列赛冠军：{{ score.p1 > score.p2 ? '玩家 1' : '玩家 2' }}
+      </div>
+
       <div class="m-stats">
         <div class="ms-item">
           <span class="ms-num">{{ stats.rounds }}</span>
@@ -26,6 +41,7 @@
           <span class="ms-label">策略评分</span>
         </div>
       </div>
+      <div class="m-duration">⏱ 用时 {{ durationText }}</div>
 
       <div v-if="!isHumanWin && !pvp && mistakes.length" class="m-mistakes">
         <div class="mm-title">关键错误回合</div>
@@ -39,7 +55,10 @@
       </div>
 
       <div class="m-btns">
-        <button class="btn btn-primary" @click="$emit('replay')">再来一局</button>
+        <button class="btn btn-primary" @click="$emit('replay')">
+          {{ pvp && seriesOver ? '再来一轮' : '再来一局' }}
+        </button>
+        <button class="btn btn-ghost" @click="$emit('review')">复盘</button>
         <button class="btn btn-ghost" @click="$emit('home')">返回首页</button>
       </div>
     </div>
@@ -55,14 +74,21 @@ const props = defineProps<{
   stats: GameStats
   history: Move[]
   pvp?: boolean
+  matchScore?: { p1: number; p2: number }
 }>()
 
-defineEmits<{ replay: []; home: [] }>()
+defineEmits<{ replay: []; review: []; home: [] }>()
 
 const isHumanWin = computed(() =>
   props.pvp
     ? props.winner === 'p1' || props.winner === 'p2'
     : props.winner === 'human',
+)
+
+const score = computed(() => props.matchScore ?? { p1: 0, p2: 0 })
+
+const seriesOver = computed(() =>
+  props.pvp ? score.value.p1 >= 2 || score.value.p2 >= 2 : false,
 )
 
 const winnerName = computed(() => {
@@ -80,12 +106,19 @@ const titleText = computed(() => {
 const subtitleText = computed(() => {
   if (props.pvp) {
     return winnerName.value
-      ? `${winnerName.value} 使异或系统归零 · 赢得了这场博弈`
+      ? `${winnerName.value} 赢得了本局${seriesOver.value ? '与系列赛' : ''}`
       : ''
   }
   return isHumanWin.value
     ? '异或系统稳定 · 你赢得了这场博弈'
     : '异或系统被攻破 · AI 获胜'
+})
+
+const durationText = computed(() => {
+  const s = Math.round(props.stats.durationMs / 1000)
+  const m = Math.floor(s / 60)
+  const sec = s % 60
+  return m > 0 ? `${m}分${sec}秒` : `${sec}秒`
 })
 
 const mistakes = computed(() =>
@@ -155,6 +188,54 @@ const letterOf = (i: number) => String.fromCharCode(65 + i)
   color: #94a3b8;
 }
 
+.m-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.ms-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ms-col.lead {
+  background: rgba(255, 204, 0, 0.12);
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.25);
+}
+
+.msc-name {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.msc-num {
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffcc00;
+  font-family: 'Consolas', monospace;
+}
+
+.msc-vs {
+  font-size: 18px;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.m-series {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #fbbf24;
+  font-weight: 700;
+}
+
 .m-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -183,6 +264,12 @@ const letterOf = (i: number) => String.fromCharCode(65 + i)
 .ms-label {
   font-size: 10px;
   color: #94a3b8;
+}
+
+.m-duration {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #64748b;
 }
 
 .m-mistakes {
@@ -228,26 +315,28 @@ const letterOf = (i: number) => String.fromCharCode(65 + i)
 
 .m-btns {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-top: 18px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn {
   border: none;
   border-radius: 12px;
-  padding: 11px 22px;
+  padding: 11px 18px;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.15s ease;
+  min-height: 44px;
 }
 
 .btn:active { transform: scale(0.96); }
 
 .btn-primary {
   background: linear-gradient(135deg, #b8860b, #ffcc00);
-  color: #041018;
+  color: #1a1400;
 }
 
 .btn-ghost {

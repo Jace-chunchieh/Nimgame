@@ -12,7 +12,7 @@
         class="lv-item"
         :class="{
           locked: !challenge.isUnlocked(lv.id),
-          current: challenge.isUnlocked(lv.id) && lv.id === challenge.unlocked,
+          current: challenge.isUnlocked(lv.id) && lv.id === challenge.progress.unlocked,
         }"
         @click="onClickLevel(lv.id)"
       >
@@ -21,7 +21,12 @@
           <span v-else class="lv-lock">🔒</span>
         </div>
         <div class="lv-info">
-          <div class="lv-name">{{ lv.name }}</div>
+          <div class="lv-name">
+            {{ lv.name }}
+            <span v-if="challenge.starsOf(lv.id) > 0" class="lv-stars">
+              {{ '★'.repeat(challenge.starsOf(lv.id)) }}<span class="lv-stars-dim">{{ '★'.repeat(3 - challenge.starsOf(lv.id)) }}</span>
+            </span>
+          </div>
           <div class="lv-diff" :class="lv.difficulty">{{ diffText(lv.difficulty) }}</div>
         </div>
         <div class="lv-piles">
@@ -31,7 +36,7 @@
     </div>
 
     <div class="lv-tip">
-      完成第 {{ challenge.unlocked - 1 }} 关后解锁下一关。挑战通过后关卡将标记为完成。
+      完成第 {{ challenge.progress.unlocked - 1 }} 关后解锁下一关。按最优操作比例评定 1~3 星，通关后仍可重打刷星。
     </div>
   </div>
 </template>
@@ -143,6 +148,17 @@ function onClickLevel(id: number) {
   font-size: 15px;
   font-weight: 700;
   color: #e2e8f0;
+}
+
+.lv-stars {
+  font-size: 12px;
+  color: #ffcc00;
+  margin-left: 4px;
+  letter-spacing: 1px;
+}
+
+.lv-stars-dim {
+  color: #334155;
 }
 
 .lv-diff {
