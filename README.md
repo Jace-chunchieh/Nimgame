@@ -36,6 +36,36 @@ npm test          # 引擎逻辑自测
 - 闯关模式（6 关逐步学习异或策略，进度本地持久化）
 - 教学模式 / 设置（难度、参数、音效、震动、低性能模式）
 
+## 部署到宝塔面板（GitHub 推送方式）
+
+服务器需安装 Node.js（宝塔「软件商店」→ Node.js 版本管理器，安装 18+）与 git。
+
+### 首次部署
+
+1. 宝塔「网站」→ 添加站点（纯静态），记录网站根目录，如 `/www/wwwroot/nimgame`
+2. 宝塔「终端」执行（替换路径）：
+
+```bash
+# 克隆仓库（私有仓库请用 https://用户名:Token@github.com/Jace-chunchieh/Nimgame.git）
+git clone https://github.com/Jace-chunchieh/Nimgame.git /www/wwwroot/nimgame-src
+```
+
+3. 执行部署脚本：
+
+```bash
+bash /www/wwwroot/nimgame-src/scripts/deploy.sh
+```
+
+### 后续更新（推送即部署）
+
+本地 `git push` 后，服务器执行：
+
+```bash
+bash /www/wwwroot/nimgame-src/scripts/deploy.sh
+```
+
+进阶：宝塔「WebHook」插件生成 URL，在 GitHub 仓库 Settings → Webhooks 中填入，可实现 push 自动部署。
+
 ## 项目结构
 
 ```
